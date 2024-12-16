@@ -42,12 +42,21 @@ test('buttons All, Active, Completed, Clear are visible ', async ({page}) => {
     await expect.soft(todoPage.buttonClearCompletedTasks).toBeVisible()
 });
 
+test('set all tasks as completed and clear completed', async ({page}) => {
+    await todoPage.inputField.fill('newTask1')
+    await todoPage.inputField.press('Enter')
+    await todoPage.inputField.fill('newTask2')
+    await todoPage.inputField.press('Enter')
+    await todoPage.buttonSelectAll.click()
 
-/*test('verify language at order page', async ({page}) => {
-    const orderCreationPage = await authPage.signIn(USERNAME, PASSWORD)
-    await orderCreationPage.statusButton.click()
-    await orderCreationPage.statusSearchInput.fill('1947')
-    await orderCreationPage.statusSearchButton.click()
-    const orderFoundPage = new OrderFoundPage(page)
-    await expect(orderFoundPage.uselessInput).toBeVisible()
-})*/
+    const todoItems = await todoPage.todoItem
+    for (let i = 0; i < await todoItems.count(); i++) {
+        const itemToggle = todoItems.nth(i).locator(todoPage.buttonSelectTask);
+        await expect.soft(itemToggle).toBeChecked();
+    }
+    await todoPage.checkCompletedToDoTaskByName('newTask1')
+    await todoPage.checkCompletedToDoTaskByName('newTask2')
+
+    await todoPage.buttonClearCompletedTasks.click()
+    expect(todoPage.todoItem).toBeNull
+});

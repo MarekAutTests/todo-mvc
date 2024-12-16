@@ -16,6 +16,8 @@ export class TodoPage {
     readonly filterCompleted: Locator
     readonly buttonClearCompletedTasks: Locator
     readonly footerLink: Locator
+    readonly todoList: Locator
+    readonly todoItem: Locator
 
     constructor(page: Page) {
         this.page = page;
@@ -31,33 +33,32 @@ export class TodoPage {
         this.filterCompleted = page.getByRole('link', {name: 'Completed'});
         this.buttonClearCompletedTasks = page.getByRole('button', {name: 'Clear completed'})
         this.footerLink = page.getByRole('link', {name: 'TodoMVC'});
+        this.todoList = page.getByTestId('todo-list');
+        this.todoItem = page.getByTestId('todo-item');
     }
 
-    async openToDoPage(){
+    async openToDoPage() {
         await this.page.goto(this.url)
     }
 
-    async counterToDoItems(){
+    async counterToDoItems() {
         return await this.todoItemLabel.count()
     }
 
-    async deleteToDoTaskByName(taskName: string){
+    async deleteToDoTaskByName(taskName: string) {
         const taskToDelete = await this.page.getByText(taskName)
         await taskToDelete.hover()
         await this.buttonDeleteTask.click()
     }
 
-    async completeToDoTaskByName(taskName: string){
+    async completeToDoTaskByName(taskName: string) {
         await this.page.locator('div').filter({hasText: taskName}).getByTestId('todo-item-toggle').click()
     }
 
-    async checkCompletedToDoTaskByName(taskName: string){
+    async checkCompletedToDoTaskByName(taskName: string) {
         const completedTask = await this.page.locator('div').filter({hasText: taskName}).getByTestId('todo-item-toggle')
-        const liClass = this.page.getByRole('listitem').filter({ has: completedTask });
+        const liClass = this.page.getByRole('listitem').filter({has: completedTask});
         await expect(liClass).toHaveClass("completed")
         //completedTask.locator('..').locator('..')//go to parent locator two times
     }
-
-
-
 }
