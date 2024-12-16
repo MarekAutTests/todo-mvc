@@ -9,17 +9,17 @@ test.beforeEach(async ({page}) => {
     await todoPage.openToDoPage()
 })
 
-test.skip('Has title', async ({page}) => {
+test('Has title', async ({page}) => {
     await expect(todoPage.pageLogo).toBeVisible()
 });
 
-test.skip('create new ToDo task', async ({page}) => {
+test('create new ToDo task', async ({page}) => {
     await todoPage.inputField.fill('newTask')
     await todoPage.inputField.press('Enter')
     expect(await todoPage.counterToDoItems()).toBe(1)
 });
 
-test.skip('delete ToDo task by name', async ({page}) => {
+test('delete ToDo task by name', async ({page}) => {
     await todoPage.inputField.fill('newTask')
     await todoPage.inputField.press('Enter')
     await todoPage.deleteToDoTaskByName('newTask')
